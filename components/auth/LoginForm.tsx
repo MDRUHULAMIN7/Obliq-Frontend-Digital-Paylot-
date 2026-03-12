@@ -44,7 +44,7 @@ export default function LoginForm() {
         <label className="text-xs font-medium text-slate-500">Email</label>
         <Input
           type="email"
-          placeholder="example@email.com"
+          placeholder="example@gmail.com"
           value={form.email}
           onChange={(event) => handleChange('email', event.target.value)}
           required

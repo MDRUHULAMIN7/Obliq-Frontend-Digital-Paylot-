@@ -80,6 +80,12 @@ const buildNav = (): {
       permission: 'users:view',
     },
     {
+      label: 'Customer Portal',
+      href: '/customer-portal',
+      icon: <LayoutGrid size={18} />,
+      permission: 'customer_portal:view',
+    },
+    {
       label: 'Messages',
       href: '/users',
       icon: <MessageCircle size={18} />,
@@ -127,16 +133,31 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { hasPermission } = usePermission();
   const [tasksOpen, setTasksOpen] = useState(true);
   const nav = useMemo(() => buildNav(), []);
+  const activeTracker = useMemo(() => new Set<string>(), [pathname]);
 
   const filterItems = (items: NavItem[]) =>
     items.filter((item) => !item.permission || hasPermission(item.permission));
 
-  const isActive = (href?: string) =>
-    href ? pathname.startsWith(href) : false;
+  const isActive = (href?: string, hasChildren?: boolean) => {
+    if (!href) {
+      return false;
+    }
+    if (hasChildren) {
+      return pathname.startsWith(href);
+    }
+    if (pathname !== href) {
+      return false;
+    }
+    if (activeTracker.has(href)) {
+      return false;
+    }
+    activeTracker.add(href);
+    return true;
+  };
 
   const renderItem = (item: NavItem) => {
-    const active = isActive(item.href);
     const hasChildren = item.children?.length;
+    const active = isActive(item.href, hasChildren);
     const showChildren = item.label === 'Tasks' ? tasksOpen : true;
 
     return (

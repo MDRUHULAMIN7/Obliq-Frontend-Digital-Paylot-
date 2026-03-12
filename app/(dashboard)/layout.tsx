@@ -14,6 +14,7 @@ const titleMap: Record<string, string> = {
   '/users': 'Users',
   '/audit': 'Audit Logs',
   '/settings': 'Settings',
+  '/customer-portal': 'Customer Portal',
   '/403': 'Access Denied',
 };
 

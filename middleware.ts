@@ -17,6 +17,7 @@ const permissionMap: Record<string, PermissionAtom> = {
   '/users': 'users:view',
   '/audit': 'audit:view',
   '/settings': 'settings:view',
+  '/customer-portal': 'customer_portal:view',
 };
 
 const publicRoutes = ['/login', '/403'];
@@ -57,10 +58,6 @@ export function middleware(request: NextRequest) {
 
   const permissions = payload.permissions ?? payload.user?.permissions ?? [];
   const role = payload.role ?? payload.user?.role;
-
-  if (pathname.startsWith('/audit') && role !== 'admin') {
-    return NextResponse.redirect(new URL('/403', request.url));
-  }
 
   if (role === 'admin' || permissions.includes(required)) {
     return NextResponse.next();

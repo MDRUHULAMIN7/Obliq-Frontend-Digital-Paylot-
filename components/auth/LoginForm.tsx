@@ -40,9 +40,7 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Email
-        </label>
+        <label className="text-xs font-medium text-slate-500">Email</label>
         <Input
           type="email"
           placeholder="example@email.com"
@@ -53,9 +51,7 @@ export default function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-          Password
-        </label>
+        <label className="text-xs font-medium text-slate-500">Password</label>
         <Input
           type={showPassword ? 'text' : 'password'}
           placeholder="Enter your password"
@@ -67,7 +63,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <div className="flex items-center justify-between text-sm text-slate-500">
+      <div className="flex items-center justify-between text-xs text-slate-500">
         <label className="flex items-center gap-2">
           <Checkbox
             checked={form.rememberMe}
@@ -75,18 +71,18 @@ export default function LoginForm() {
           />
           Remember me
         </label>
-        <button type="button" className="text-orange-600 hover:text-orange-700">
+        <button type="button" className="text-orange-500 hover:text-orange-600">
           Forgot password?
         </button>
       </div>
 
       <Button className="w-full" type="submit" isLoading={loading}>
-        Log In
+        Log in
       </Button>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-xs text-slate-500">
         Don&apos;t have an account?{' '}
-        <span className="font-semibold text-orange-600">Sign up</span>
+        <span className="font-semibold text-slate-700">Sign up</span>
       </p>
     </form>
   );

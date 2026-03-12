@@ -25,6 +25,13 @@ export default function UsersPage() {
   const [roleFilter, setRoleFilter] = useState('');
   const [page, setPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm, setCreateForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'agent',
+  });
 
   const { data, isLoading } = useQuery({
     queryKey: queryKeys.users(roleFilter || undefined),
@@ -83,6 +90,31 @@ export default function UsersPage() {
     onError: () => toast.error('Failed to ban user'),
   });
 
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        name: createForm.name.trim(),
+        email: createForm.email.trim(),
+        password: createForm.password,
+        role: createForm.role,
+      };
+      const response = await api.post<ApiResponse<User>>('/users', payload);
+      return response.data.data;
+    },
+    onSuccess: () => {
+      toast.success('User created');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setCreateOpen(false);
+      setCreateForm({ name: '', email: '', password: '', role: 'agent' });
+    },
+    onError: () => toast.error('Failed to create user'),
+  });
+
+  const availableRoles =
+    user?.role === 'manager'
+      ? ['agent', 'customer']
+      : ['admin', 'manager', 'agent', 'customer'];
+
   const roleBadge = (role: User['role']) => {
     switch (role) {
       case 'admin':
@@ -132,6 +164,9 @@ export default function UsersPage() {
               <option value="agent">Agent</option>
               <option value="customer">Customer</option>
             </select>
+            {hasPermission('users:create') && (
+              <Button onClick={() => setCreateOpen(true)}>Create User</Button>
+            )}
           </div>
         </div>
 
@@ -261,7 +296,7 @@ export default function UsersPage() {
                   Permissions
                 </h3>
                 <p className="text-xs text-slate-500">
-                  {selectedUser.name} · {selectedUser.email}
+                  {selectedUser.name} - {selectedUser.email}
                 </p>
               </div>
               <button
@@ -278,6 +313,121 @@ export default function UsersPage() {
               canEdit={hasPermission('users:edit')}
               onSave={(updated) => setSelectedUser(updated)}
             />
+          </div>
+        </div>
+      ) : null}
+
+      {createOpen ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setCreateOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  Create User
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Add a new user with a role and password.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-sm text-slate-400 hover:text-orange-600"
+                onClick={() => setCreateOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-500">
+                  Name
+                </label>
+                <Input
+                  value={createForm.name}
+                  onChange={(event) =>
+                    setCreateForm((prev) => ({
+                      ...prev,
+                      name: event.target.value,
+                    }))
+                  }
+                  placeholder="Full name"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-500">
+                  Email
+                </label>
+                <Input
+                  type="email"
+                  value={createForm.email}
+                  onChange={(event) =>
+                    setCreateForm((prev) => ({
+                      ...prev,
+                      email: event.target.value,
+                    }))
+                  }
+                  placeholder="user@email.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-500">
+                  Password
+                </label>
+                <Input
+                  type="password"
+                  value={createForm.password}
+                  onChange={(event) =>
+                    setCreateForm((prev) => ({
+                      ...prev,
+                      password: event.target.value,
+                    }))
+                  }
+                  placeholder="Minimum 6 characters"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-slate-500">
+                  Role
+                </label>
+                <select
+                  value={createForm.role}
+                  onChange={(event) =>
+                    setCreateForm((prev) => ({
+                      ...prev,
+                      role: event.target.value,
+                    }))
+                  }
+                  className="w-full rounded-xl border border-orange-100 px-3 py-2 text-sm"
+                >
+                  {availableRoles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="pt-2">
+                <Button
+                  className="w-full"
+                  onClick={() => createMutation.mutate()}
+                  isLoading={createMutation.isPending}
+                  disabled={
+                    !createForm.name.trim() ||
+                    !createForm.email.trim() ||
+                    createForm.password.length < 6
+                  }
+                >
+                  Create User
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

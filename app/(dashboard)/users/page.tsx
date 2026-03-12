@@ -216,6 +216,44 @@ export default function UsersPage() {
     onError: () => toast.error('Failed to update user'),
   });
 
+  const canManagePermissionsTarget = (target: User) => {
+    if (!user || !hasPermission('users:edit')) {
+      return false;
+    }
+
+    if (user.role === 'admin') {
+      return target.role !== 'admin';
+    }
+
+    if (user.role === 'manager') {
+      return (
+        target.createdBy === user._id &&
+        (target.role === 'agent' || target.role === 'customer')
+      );
+    }
+
+    return false;
+  };
+
+  const canManageStatusTarget = (target: User) => {
+    if (!user || !hasPermission('users:edit')) {
+      return false;
+    }
+
+    if (user.role === 'admin') {
+      return target.role !== 'admin';
+    }
+
+    if (user.role === 'manager') {
+      return (
+        target.createdBy === user._id &&
+        (target.role === 'agent' || target.role === 'customer')
+      );
+    }
+
+    return false;
+  };
+
   const roleBadge = (role: User['role']) => {
     switch (role) {
       case 'admin':
@@ -330,7 +368,7 @@ export default function UsersPage() {
                 <span className="text-slate-500">{row.email}</span>
                 {roleBadge(row.role)}
                 <div>
-                  {hasPermission('users:edit') ? (
+                  {canManageStatusTarget(row) ? (
                     <select
                       value={row.status}
                       onChange={(event) =>
@@ -361,7 +399,7 @@ export default function UsersPage() {
                       Actions
                     </summary>
                     <div className="absolute right-0 z-10 mt-2 w-40 rounded-2xl border border-orange-100 bg-white p-2 text-xs shadow-lg">
-                      {hasPermission('users:view') && (
+                      {canManagePermissionsTarget(row) && (
                         <button
                           type="button"
                           className="w-full rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-orange-50 hover:text-orange-700"
@@ -385,22 +423,23 @@ export default function UsersPage() {
                           Edit
                         </button>
                       )}
-                        {hasPermission('users:suspend') && (
-                          <button
-                            type="button"
-                            className="w-full rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-orange-50 hover:text-orange-700"
-                            onClick={() => suspendMutation.mutate(row._id)}
-                          >
-                            Suspend
-                          </button>
-                        )}
-                        {hasPermission('users:ban') && (
-                          <button
-                            type="button"
-                            className="w-full rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-orange-50 hover:text-orange-700"
-                            onClick={() => banMutation.mutate(row._id)}
-                          >
-                            Ban
+                      {hasPermission('users:suspend') &&
+                      row.role !== 'admin' && (
+                        <button
+                          type="button"
+                          className="w-full rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-orange-50 hover:text-orange-700"
+                          onClick={() => suspendMutation.mutate(row._id)}
+                        >
+                          Suspend
+                        </button>
+                      )}
+                      {hasPermission('users:ban') && row.role !== 'admin' && (
+                        <button
+                          type="button"
+                          className="w-full rounded-lg px-3 py-2 text-left text-slate-600 hover:bg-orange-50 hover:text-orange-700"
+                          onClick={() => banMutation.mutate(row._id)}
+                        >
+                          Ban
                           </button>
                         )}
                       </div>
@@ -424,13 +463,15 @@ export default function UsersPage() {
                       <p className="text-xs text-slate-500">{row.email}</p>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <button
-                        type="button"
-                        className="rounded-full bg-orange-50 px-3 py-1 text-[10px] font-semibold text-orange-600"
-                        onClick={() => setSelectedUser(row)}
-                      >
-                        Permissions
-                      </button>
+                      {canManagePermissionsTarget(row) && (
+                        <button
+                          type="button"
+                          className="rounded-full bg-orange-50 px-3 py-1 text-[10px] font-semibold text-orange-600"
+                          onClick={() => setSelectedUser(row)}
+                        >
+                          Permissions
+                        </button>
+                      )}
                       {hasPermission('users:edit') && (
                         <button
                           type="button"
@@ -451,7 +492,7 @@ export default function UsersPage() {
 
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500">
                     {roleBadge(row.role)}
-                    {hasPermission('users:edit') ? (
+                    {canManageStatusTarget(row) ? (
                       <select
                         value={row.status}
                         onChange={(event) =>
@@ -475,7 +516,7 @@ export default function UsersPage() {
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {hasPermission('users:suspend') && (
+                    {hasPermission('users:suspend') && row.role !== 'admin' && (
                       <button
                         type="button"
                         className="rounded-full border border-orange-200 px-3 py-1 text-[10px] font-semibold text-orange-600"
@@ -484,7 +525,7 @@ export default function UsersPage() {
                         Suspend
                       </button>
                     )}
-                    {hasPermission('users:ban') && (
+                    {hasPermission('users:ban') && row.role !== 'admin' && (
                       <button
                         type="button"
                         className="rounded-full border border-orange-200 px-3 py-1 text-[10px] font-semibold text-orange-600"
@@ -561,7 +602,7 @@ export default function UsersPage() {
               <PermissionEditor
                 user={selectedUser}
                 currentUserPermissions={currentUserPermissions}
-                canEdit={hasPermission('users:edit')}
+                canEdit={canManagePermissionsTarget(selectedUser)}
                 onSave={(updated) => setSelectedUser(updated)}
               />
             </div>

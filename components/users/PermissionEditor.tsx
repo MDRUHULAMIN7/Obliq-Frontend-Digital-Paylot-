@@ -66,6 +66,11 @@ export default function PermissionEditor({
 
   return (
     <div className="space-y-6">
+      {!canEdit ? (
+        <div className="rounded-2xl border border-orange-100 bg-orange-50 px-4 py-3 text-xs text-orange-700">
+          You cannot edit this user&apos;s permissions.
+        </div>
+      ) : null}
       {Object.entries(PERMISSION_GROUPS).map(([group, items]) => (
         <div key={group}>
           <h4 className="text-xs font-semibold uppercase text-slate-400">
@@ -73,7 +78,7 @@ export default function PermissionEditor({
           </h4>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {items.map((permission) => {
-              const enabled = allowedPermissions.has(permission);
+              const enabled = allowedPermissions.has(permission) && canEdit;
               const checked = selected.includes(permission);
               return (
                 <label

@@ -30,6 +30,7 @@ export default function LoginForm() {
       setLoading(true);
       await login(form);
       router.push('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Login failed. Please check your credentials.');
     } finally {

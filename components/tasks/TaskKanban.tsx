@@ -4,7 +4,7 @@ export default function TaskKanban() {
       title: 'Backlog',
       items: [
         { title: 'Call about proposal', tag: 'Urgent', tagClass: 'bg-rose-100 text-rose-600' },
-        { title: 'Send onboarding docs', tag: 'High', tagClass: 'bg-orange-100 text-orange-600' },
+        { title: 'Send onboarding doc', tag: 'High', tagClass: 'bg-orange-100 text-orange-600' },
       ],
     },
     {
@@ -23,7 +23,7 @@ export default function TaskKanban() {
   ];
 
   return (
-    <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-[var(--shadow-soft)]">
+    <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-soft">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-slate-900">Kanban</p>
         <span className="rounded-full bg-orange-100 px-3 py-1 text-[10px] font-semibold text-orange-600">

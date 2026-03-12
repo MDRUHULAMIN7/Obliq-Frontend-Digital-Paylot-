@@ -33,9 +33,15 @@ api.interceptors.response.use(
 
     const requestUrl = originalRequest.url ?? '';
     const isAuthRoute =
-      requestUrl.includes('/auth/login') || requestUrl.includes('/auth/refresh');
+      requestUrl.includes('/auth/login') ||
+      requestUrl.includes('/auth/refresh') ||
+      requestUrl.includes('/auth/me') ||
+      requestUrl.includes('/auth/logout');
 
-    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isAuthRoute) {
+        return Promise.reject(error);
+      }
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           pendingQueue.push(() => {
@@ -61,7 +67,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue();
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
           window.location.href = '/login';
         }
         return Promise.reject(refreshError);

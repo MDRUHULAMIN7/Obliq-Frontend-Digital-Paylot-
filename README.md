@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Obliq RBAC Frontend
 
-## Getting Started
+Next.js 14 (App Router) frontend for the RBAC system. The UI is fully permission‑driven: routes and navigation are gated by permission atoms, not roles.
 
-First, run the development server:
+## Features
+- Dynamic route access via `middleware.ts` (permission atoms)
+- Permission‑based sidebar navigation
+- Auth with JWT + refresh token (cookies)
+- Users management UI (list, filters, pagination, permissions editor)
+- Core modules/pages: Dashboard, Leads, Tasks, Reports, Users, Audit, Settings, Customer Portal, Contacts, Messages, Help Center, Invoice
+- Fully responsive UI
 
+## Local Setup
+
+### 1) Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2) Environment variables
+Create or edit `frontend/.env`:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+# Optional for proxy mode:
+# BACKEND_URL=https://your-backend.vercel.app
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3) Run dev server
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000`.
 
-## Learn More
+## Admin Credentials (Local)
+Admin is auto‑seeded by the backend on first run:
+- **Email:** `admin@obliq.local`
+- **Password:** value of `SUPER_ADMIN_PASSWORD` in `backend/.env`
 
-To learn more about Next.js, take a look at the following resources:
+## Production Deploy (Vercel)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Recommended setup uses same‑origin proxy to ensure cookies are set on the frontend domain.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Frontend Env Vars**
+```env
+NEXT_PUBLIC_API_URL=/api/v1
+BACKEND_URL=https://your-backend.vercel.app
+```
 
-## Deploy on Vercel
+Then deploy the `frontend` directory to Vercel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure (Frontend)
+```
+app/                # App Router pages
+components/         # UI + feature components
+hooks/              # Auth + permission hooks
+lib/                # API client, permissions, helpers
+providers/          # Auth + Query providers
+types/              # Shared TS types
+middleware.ts       # Permission-based routing
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+- If login succeeds but dashboard does not load in production, verify cookies are set on the frontend domain and use proxy mode.
+- Use `admin@obliq.local` for the initial admin account.

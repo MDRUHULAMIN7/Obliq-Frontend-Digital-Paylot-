@@ -138,6 +138,7 @@ function UsersPageInner() {
     onSuccess: () => {
       toast.success('User suspended');
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      
     },
     onError: () => toast.error('Failed to suspend user'),
   });

@@ -74,8 +74,8 @@ const buildNav = (): {
   ],
   users: [
     {
-      label: 'Contacts',
-      href: '/contacts',
+      label: 'Users',
+      href: '/users',
       icon: <Users size={18} />,
       permission: 'users:view',
     },
@@ -134,8 +134,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [tasksOpen, setTasksOpen] = useState(true);
   const nav = useMemo(() => buildNav(), []);
 
-  const filterItems = (items: NavItem[]) =>
-    items.filter((item) => !item.permission || hasPermission(item.permission));
+  const filterItems = (items: NavItem[]) => {
+    if (!user) {
+      return items;
+    }
+    return items.filter(
+      (item) => !item.permission || hasPermission(item.permission),
+    );
+  };
 
   const activeHref = useMemo(() => {
     const groups = [nav.main, nav.users, nav.other, nav.bottom];

@@ -133,7 +133,8 @@ function UsersPageInner() {
         `/users/${id}/suspend`,
       );
       return response.data.data;
-    },
+    }, 
+    
     onSuccess: () => {
       toast.success('User suspended');
       queryClient.invalidateQueries({ queryKey: ['users'] });

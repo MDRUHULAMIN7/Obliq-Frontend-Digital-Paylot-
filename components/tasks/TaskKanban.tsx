@@ -3,7 +3,7 @@ export default function TaskKanban() {
     {
       title: 'Backlog',
       items: [
-        { title: 'Call about proposal', tag: 'Urgent', tagClass: 'bg-rose-100 text-rose-600' },
+        { title: 'Call about proposal ', tag: 'Urgent', tagClass: 'bg-rose-100 text-rose-600' },
         { title: 'Send onboarding doc', tag: 'High', tagClass: 'bg-orange-100 text-orange-600' },
       ],
     },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,7 +19,7 @@ import type { ApiResponse, User } from '../../../types';
 
 const pageSize = 10;
 
-export default function UsersPage() {
+function UsersPageInner() {
   const { user } = useAuth();
   const { hasPermission } = usePermission();
   const queryClient = useQueryClient();
@@ -812,5 +812,29 @@ export default function UsersPage() {
         </div>
       ) : null}
     </PageWrapper>
+  );
+}
+
+export default function UsersPage() {
+  return (
+    <Suspense
+      fallback={
+        <PageWrapper title="Users">
+          <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-soft)]">
+            <div className="h-10 animate-pulse rounded-2xl bg-orange-50" />
+            <div className="mt-6 space-y-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-12 animate-pulse rounded-2xl bg-orange-50"
+                />
+              ))}
+            </div>
+          </div>
+        </PageWrapper>
+      }
+    >
+      <UsersPageInner />
+    </Suspense>
   );
 }

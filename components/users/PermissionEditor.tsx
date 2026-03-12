@@ -109,14 +109,16 @@ export default function PermissionEditor({
         </div>
       ))}
 
-      <Button
-        className="w-full"
-        onClick={() => mutation.mutate(selected)}
-        isLoading={mutation.isPending}
-        disabled={!canEdit}
-      >
-        {canEdit ? 'Save Changes' : 'Read Only'}
-      </Button>
+      <div className="sticky bottom-0 bg-white pt-4">
+        <Button
+          className="w-full"
+          onClick={() => mutation.mutate(selected)}
+          isLoading={mutation.isPending}
+          disabled={!canEdit}
+        >
+          {canEdit ? 'Save Changes' : 'Read Only'}
+        </Button>
+      </div>
     </div>
   );
 }

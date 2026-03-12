@@ -133,32 +133,37 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { hasPermission } = usePermission();
   const [tasksOpen, setTasksOpen] = useState(true);
   const nav = useMemo(() => buildNav(), []);
-  const activeTracker = useMemo(() => new Set<string>(), [pathname]);
 
   const filterItems = (items: NavItem[]) =>
     items.filter((item) => !item.permission || hasPermission(item.permission));
 
-  const isActive = (href?: string, hasChildren?: boolean) => {
-    if (!href) {
-      return false;
+  const activeHref = useMemo(() => {
+    const groups = [nav.main, nav.users, nav.other, nav.bottom];
+    for (const group of groups) {
+      for (const item of group) {
+        if (item.href && pathname.startsWith(item.href)) {
+          return item.href;
+        }
+        if (item.children?.length) {
+          const match = item.children.find(
+            (child) => child.href && pathname.startsWith(child.href),
+          );
+          if (match) {
+            return item.href;
+          }
+        }
+      }
     }
-    if (hasChildren) {
-      return pathname.startsWith(href);
-    }
-    if (pathname !== href) {
-      return false;
-    }
-    if (activeTracker.has(href)) {
-      return false;
-    }
-    activeTracker.add(href);
-    return true;
-  };
+    return null;
+  }, [nav, pathname]);
 
   const renderItem = (item: NavItem) => {
     const hasChildren = item.children?.length;
-    const active = isActive(item.href, hasChildren);
+    const active = item.href ? item.href === activeHref : false;
     const showChildren = item.label === 'Tasks' ? tasksOpen : true;
+    const activeChildHref = item.children?.find(
+      (child) => child.href && pathname.startsWith(child.href),
+    )?.href;
 
     return (
       <div key={item.label}>
@@ -197,7 +202,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href={child.href ?? '#'}
                 className={cn(
                   'block rounded-lg px-2 py-1 text-xs font-medium',
-                  isActive(child.href)
+                  child.href && child.href === activeChildHref
                     ? 'bg-orange-50 text-orange-700'
                     : 'text-slate-500 hover:text-orange-600',
                 )}

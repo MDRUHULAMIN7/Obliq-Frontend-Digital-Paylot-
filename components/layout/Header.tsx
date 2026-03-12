@@ -1,6 +1,7 @@
 'use client';
 
-import { Bell, Menu } from 'lucide-react';
+import { Bell, LogOut, Menu } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import useAuth from '../../hooks/useAuth';
 
 type HeaderProps = {
@@ -9,7 +10,13 @@ type HeaderProps = {
 };
 
 export default function Header({ title, onToggleSidebar }: HeaderProps) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/login');
+  };
 
   return (
     <header className="flex items-center justify-between gap-4 border-b border-orange-100 bg-white/80 px-6 py-4 backdrop-blur">
@@ -24,6 +31,21 @@ export default function Header({ title, onToggleSidebar }: HeaderProps) {
         <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
       </div>
       <div className="flex items-center gap-4">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="hidden items-center gap-2 rounded-full border border-orange-100 px-3 py-2 text-xs font-semibold text-orange-600 hover:border-orange-200 hover:bg-orange-50 sm:flex"
+        >
+          <LogOut size={14} />
+          Logout
+        </button>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 text-orange-600 hover:border-orange-200 hover:bg-orange-50 sm:hidden"
+        >
+          <LogOut size={16} />
+        </button>
         <button className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-100 text-slate-700 hover:border-orange-200 hover:text-orange-600">
           <Bell size={18} />
         </button>

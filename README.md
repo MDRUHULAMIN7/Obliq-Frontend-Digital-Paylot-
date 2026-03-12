@@ -1,6 +1,6 @@
 # Obliq RBAC Frontend
 
-Next.js 14 (App Router) frontend for the RBAC system. The UI is fully permission‑driven: routes and navigation are gated by permission atoms, not roles.
+Next.js 16 (App Router) frontend for the RBAC system. The UI is fully permission‑driven: routes and navigation are gated by permission atoms, not roles.
 
 ## Features
 - Dynamic route access via `middleware.ts` (permission atoms)

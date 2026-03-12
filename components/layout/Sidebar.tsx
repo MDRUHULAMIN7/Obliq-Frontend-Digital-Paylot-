@@ -50,7 +50,7 @@ const buildNav = (): {
     },
     {
       label: 'Opportunities',
-      href: '/leads',
+      href: '/opportunities',
       icon: <StickyNote size={18} />,
       permission: 'leads:view',
     },
@@ -60,9 +60,9 @@ const buildNav = (): {
       icon: <CalendarDays size={18} />,
       permission: 'tasks:view',
       children: [
-        { label: 'Assignments', href: '/tasks', permission: 'tasks:view' },
-        { label: 'Calendar', href: '/tasks', permission: 'tasks:view' },
-        { label: 'Reminders', href: '/tasks', permission: 'tasks:view' },
+        { label: 'Assignments', href: '/tasks/assignments', permission: 'tasks:view' },
+        { label: 'Calendar', href: '/tasks/calendar', permission: 'tasks:view' },
+        { label: 'Reminders', href: '/tasks/reminders', permission: 'tasks:view' },
       ],
     },
     {
@@ -75,7 +75,7 @@ const buildNav = (): {
   users: [
     {
       label: 'Contacts',
-      href: '/users',
+      href: '/contacts',
       icon: <Users size={18} />,
       permission: 'users:view',
     },
@@ -87,7 +87,7 @@ const buildNav = (): {
     },
     {
       label: 'Messages',
-      href: '/users',
+      href: '/messages',
       icon: <MessageCircle size={18} />,
       permission: 'users:view',
     },
@@ -101,7 +101,7 @@ const buildNav = (): {
     },
     {
       label: 'Invoice',
-      href: '/reports',
+      href: '/invoice',
       icon: <CreditCard size={18} />,
       permission: 'reports:view',
     },
@@ -109,7 +109,7 @@ const buildNav = (): {
   bottom: [
     {
       label: 'Help center',
-      href: '/settings',
+      href: '/help-center',
       icon: <CircleHelp size={18} />,
       permission: 'settings:view',
     },

@@ -12,11 +12,19 @@ type TokenPayload = {
 const permissionMap: Record<string, PermissionAtom> = {
   '/dashboard': 'dashboard:view',
   '/leads': 'leads:view',
+  '/opportunities': 'leads:view',
   '/tasks': 'tasks:view',
+  '/tasks/assignments': 'tasks:view',
+  '/tasks/calendar': 'tasks:view',
+  '/tasks/reminders': 'tasks:view',
   '/reports': 'reports:view',
   '/users': 'users:view',
+  '/contacts': 'users:view',
+  '/messages': 'users:view',
   '/audit': 'audit:view',
   '/settings': 'settings:view',
+  '/help-center': 'settings:view',
+  '/invoice': 'reports:view',
   '/customer-portal': 'customer_portal:view',
 };
 

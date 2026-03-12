@@ -1,43 +1,48 @@
 import PageWrapper from '../../../components/layout/PageWrapper';
 
-export default function CustomerPortalPage() {
+export default function MessagesPage() {
   return (
-    <PageWrapper title="Customer Portal">
+    <PageWrapper title="Messages">
       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-soft)]">
-          <h3 className="text-base font-semibold text-slate-900">
-            Active Requests
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-semibold text-slate-900">
+              Recent Threads
+            </h3>
+            <span className="text-xs text-slate-500">8 unread</span>
+          </div>
           <div className="mt-4 space-y-3">
             {[
-              { title: 'Order #2049', status: 'In review', eta: '2 days' },
-              { title: 'Support Ticket #981', status: 'Open', eta: '4 hours' },
-              { title: 'Subscription renewal', status: 'Pending', eta: '1 day' },
-            ].map((item) => (
+              { name: 'Rashed H.', text: 'Need update on delivery', time: '2m' },
+              { name: 'Support Team', text: 'Ticket #1184 assigned', time: '8m' },
+              { name: 'Client Ops', text: 'Approve new quote', time: '1h' },
+            ].map((thread) => (
               <div
-                key={item.title}
+                key={thread.name}
                 className="flex items-center justify-between rounded-2xl border border-slate-100 px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-semibold text-slate-900">
-                    {item.title}
+                    {thread.name}
                   </p>
-                  <p className="text-xs text-slate-500">{item.status}</p>
+                  <p className="text-xs text-slate-500">{thread.text}</p>
                 </div>
-                <span className="text-[10px] text-slate-400">{item.eta}</span>
+                <span className="text-[10px] text-slate-400">
+                  {thread.time}
+                </span>
               </div>
             ))}
           </div>
         </div>
         <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-soft)]">
           <h3 className="text-base font-semibold text-slate-900">
-            Account Snapshot
+            Message Stats
           </h3>
           <div className="mt-4 space-y-3">
             {[
-              { label: 'Plan', value: 'Enterprise' },
-              { label: 'Renewal', value: 'Oct 23' },
-              { label: 'Open invoices', value: '2' },
+              { label: 'Open conversations', value: '14' },
+              { label: 'SLA risk', value: '2' },
+              { label: 'Avg response time', value: '18m' },
             ].map((item) => (
               <div
                 key={item.label}

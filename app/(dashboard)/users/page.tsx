@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useRouter, useSearchParams } from 'next/navigation';
+import type { AxiosError } from 'axios';
 import PageWrapper from '../../../components/layout/PageWrapper';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
@@ -85,7 +86,7 @@ export default function UsersPage() {
     router.replace(qs ? `?${qs}` : '');
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: queryKeys.users({
       page,
       limit: pageSize,
@@ -110,6 +111,9 @@ export default function UsersPage() {
   const users = data?.data ?? [];
   const pagedUsers = users;
   const totalPages = data?.meta?.totalPages ?? 1;
+  const errorMessage =
+    (error as AxiosError<{ message?: string }>)?.response?.data?.message ??
+    'Failed to load users.';
 
   useEffect(() => {
     if (page > totalPages) {
@@ -297,6 +301,10 @@ export default function UsersPage() {
                 className="h-12 animate-pulse rounded-2xl bg-orange-50"
               />
             ))}
+          </div>
+        ) : isError ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-orange-200 p-6 text-center text-sm text-slate-500">
+            {errorMessage}
           </div>
         ) : pagedUsers.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-orange-200 p-6 text-center text-sm text-slate-500">

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
@@ -11,7 +10,6 @@ import useAuth from '../../hooks/useAuth';
 
 export default function LoginForm() {
   const { login } = useAuth();
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -29,9 +27,11 @@ export default function LoginForm() {
     try {
       setLoading(true);
       await login(form);
-      router.push('/dashboard');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      if (typeof window !== 'undefined') {
+        window.location.href = '/dashboard';
+      }
     } catch (error) {
+      console.log(error)
       toast.error('Login failed. Please check your credentials.');
     } finally {
       setLoading(false);

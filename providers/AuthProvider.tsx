@@ -21,7 +21,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       '/auth/login',
       credentials,
     );
-
+    console.log(response)
     const loggedUser = response.data?.data?.user ?? null;
 
     setUser(loggedUser);

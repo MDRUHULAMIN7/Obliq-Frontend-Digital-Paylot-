@@ -134,7 +134,7 @@ function UsersPageInner() {
       );
       return response.data.data;
     }, 
-    
+
     onSuccess: () => {
       toast.success('User suspended');
       queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -281,7 +281,7 @@ function UsersPageInner() {
 
   return (
     <PageWrapper title="Users">
-      <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-soft)]">
+      <div className="rounded-3xl bg-white p-6 shadow-soft">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <Input
             placeholder="Search by name or email"
@@ -821,7 +821,7 @@ export default function UsersPage() {
     <Suspense
       fallback={
         <PageWrapper title="Users">
-          <div className="rounded-3xl bg-white p-6 shadow-[var(--shadow-soft)]">
+          <div className="rounded-3xl bg-white p-6 shadow-soft">
             <div className="h-10 animate-pulse rounded-2xl bg-orange-50" />
             <div className="mt-6 space-y-3">
               {Array.from({ length: 6 }).map((_, index) => (

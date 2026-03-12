@@ -1,11 +1,16 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 const rawBaseURL = process.env.NEXT_PUBLIC_API_URL;
+const isLocalApi =
+  typeof rawBaseURL === 'string' &&
+  (rawBaseURL.includes('localhost') || rawBaseURL.includes('127.0.0.1'));
 const baseURL =
   typeof window === 'undefined'
     ? rawBaseURL
     : rawBaseURL && rawBaseURL.startsWith('http')
-      ? '/api/v1'
+      ? isLocalApi
+        ? rawBaseURL
+        : '/api/v1'
       : rawBaseURL || '/api/v1';
 
 let isRefreshing = false;

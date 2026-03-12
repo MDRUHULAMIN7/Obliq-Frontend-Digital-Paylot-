@@ -39,7 +39,6 @@ export default function UsersPage() {
   const [editUser, setEditUser] = useState<User | null>(null);
   const [editForm, setEditForm] = useState({
     name: '',
-    email: '',
     role: 'agent',
   });
 
@@ -197,7 +196,6 @@ export default function UsersPage() {
       }
       const payload = {
         name: editForm.name.trim(),
-        email: editForm.email.trim(),
         role: editForm.role,
       };
       const response = await api.patch<ApiResponse<User>>(
@@ -372,7 +370,6 @@ export default function UsersPage() {
                             setEditUser(row);
                             setEditForm({
                               name: row.name,
-                              email: row.email,
                               role: row.role,
                             });
                           }}
@@ -434,7 +431,6 @@ export default function UsersPage() {
                             setEditUser(row);
                             setEditForm({
                               name: row.name,
-                              email: row.email,
                               role: row.role,
                             });
                           }}
@@ -723,21 +719,13 @@ export default function UsersPage() {
                   placeholder="Full name"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="text-xs font-medium text-slate-500">
-                  Email
+                  Email (read-only)
                 </label>
-                <Input
-                  type="email"
-                  value={editForm.email}
-                  onChange={(event) =>
-                    setEditForm((prev) => ({
-                      ...prev,
-                      email: event.target.value,
-                    }))
-                  }
-                  placeholder="user@email.com"
-                />
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                  {editUser?.email}
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-medium text-slate-500">
@@ -765,7 +753,7 @@ export default function UsersPage() {
                   className="w-full"
                   onClick={() => updateUserMutation.mutate()}
                   isLoading={updateUserMutation.isPending}
-                  disabled={!editForm.name.trim() || !editForm.email.trim()}
+                  disabled={!editForm.name.trim()}
                 >
                   Save Changes
                 </Button>

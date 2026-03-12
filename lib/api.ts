@@ -1,6 +1,12 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const rawBaseURL = process.env.NEXT_PUBLIC_API_URL;
+const baseURL =
+  typeof window === 'undefined'
+    ? rawBaseURL
+    : rawBaseURL && rawBaseURL.startsWith('http')
+      ? '/api/v1'
+      : rawBaseURL || '/api/v1';
 
 let isRefreshing = false;
 let pendingQueue: Array<() => void> = [];
